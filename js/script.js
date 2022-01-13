@@ -9,17 +9,13 @@ const playAgainButton = document.querySelector(".play-again"); // play again but
 const word = "magnolia";
 const guessedLetters = [];
 
-
-
 const placeholderCircle = function(word) {
   const numOfLetters = [];
   for (const letters of word) {
  	console.log(letters);
  	numOfLetters.push("●");
  };
-
  wordInProgress.innerText = numOfLetters.join("");
-
 };
 
 placeholderCircle(word);
@@ -29,10 +25,9 @@ guessButton.addEventListener("click", function(e){
  message.innerText= "";
  const inputLetter = letterInputBox.value;
  const validatedInput = playerInput(inputLetter);
- if (validatedInput) { //I think this checks to see if anything has been returned, i.e. if input passed validation and was passed to this variable?
+ if (validatedInput) { 
  	makeGuess(inputLetter);}
 letterInputBox.value = "";
-
 });
 
 const playerInput = function(input) { 
@@ -44,9 +39,7 @@ const playerInput = function(input) {
     } else if (!input.match(acceptedLetter)) {
     	message.innerText = "Only letters are allowed.";
     } else {return input;
-    }
-    
-};
+}};
 
 const makeGuess = function(inputLetter) {
  inputLetter = inputLetter.toUpperCase();
@@ -55,5 +48,37 @@ const makeGuess = function(inputLetter) {
  } else {
  	guessedLetters.push(inputLetter);
     console.log(guessedLetters); 
+    displayGuessedLetters();
+    updateWordInProgress(guessedLetters);
 }};
 
+const displayGuessedLetters = function(){
+   guessLetterList.innerHTML = "";
+   for (const letter of guessedLetters ) {
+   const li = document.createElement("li"); //should this be a new variable name? same for next line
+   li.innerText = letter;
+   guessLetterList.append(li);
+}};
+
+const updateWordInProgress = function(guessedLetters){
+ const wordUpper = word.toUpperCase();
+ const wordArray = wordUpper.split("");
+ const revealWord = [];
+// console.log(wordArray);
+ for (const letter of wordArray) {
+   if (guessedLetters.includes(letter)){
+      revealWord.push(letter.toUpperCase());
+
+ } else {
+   revealWord.push("●");
+}
+wordInProgress.innerText = revealWord.join("");
+checkWin();
+}};
+
+const checkWin = function(){
+ if (word.toUpperCase() === wordInProgress.innerText) {
+   message.classList.add("win");
+  message.innerHTML = `<p class="highlight">You guessed the correct word! Congrats!</p>`;
+ }
+};
